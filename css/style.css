@@ -196,6 +196,14 @@ a { color: var(--azul-rio); }
 
 .ob-termo { text-align: justify; }
 
+.ob-icone-inline {
+  width: 17px;
+  height: 17px;
+  vertical-align: -3px;
+  color: var(--azul-rio);
+}
+.ob-btn-instalar { width: 100%; margin-top: 2px; }
+
 .ob-carimbo-area { position: relative; padding-top: 6px; overflow: hidden; } /* clipa o scale(3) da carimbada */
 .ob-carimbo {
   position: static;

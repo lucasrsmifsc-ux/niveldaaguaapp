@@ -58,7 +58,30 @@ function init() {
 
 /* ==================== onboarding: processo de admissão ==================== */
 
-const ob = { slide: 0, total: 4, assinando: false, timers: [] };
+const ob = { slide: 0, total: 5, assinando: false, timers: [] };
+
+// Chrome/Android oferece instalação de verdade; guardamos o convite para o botão do ofício
+let installPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  installPrompt = e;
+  const btn = document.querySelector('#btnInstalar');
+  if (btn) btn.hidden = false;
+});
+
+function isStandalone() {
+  return window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+}
+
+function pickInstallVariant() {
+  if (isStandalone()) return 'done';
+  const ua = navigator.userAgent;
+  const isIOS =
+    /iPad|iPhone|iPod/.test(ua) || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  if (isIOS) return 'ios';
+  if (/Android/.test(ua)) return 'android';
+  return 'generic';
+}
 
 function enterOnboarding() {
   ob.slide = 0;
@@ -67,6 +90,13 @@ function enterOnboarding() {
   ob.timers = [];
   $('#obCarimbo').hidden = true;
   $('#btnObProximo').disabled = false;
+
+  const variant = pickInstallVariant();
+  document.querySelectorAll('.ob-install').forEach((d) => {
+    d.hidden = !d.classList.contains(`ob-install--${variant}`);
+  });
+  $('#btnInstalar').hidden = !installPrompt;
+
   showObSlide(0);
   ui.showScreen('onboarding');
 }
@@ -108,6 +138,15 @@ function wireOnboarding() {
       }, 250),
       setTimeout(() => finishOnboarding(C.TOASTS.posse), 1400)
     );
+  });
+
+  $('#btnInstalar').addEventListener('click', async () => {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    const { outcome } = await installPrompt.userChoice;
+    installPrompt = null;
+    $('#btnInstalar').hidden = true;
+    if (outcome === 'accepted') ui.toast('Posto de comando instalado. A capivara aprova.', 4000);
   });
 
   $('#btnObPular').addEventListener('click', () => {
