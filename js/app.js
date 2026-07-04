@@ -36,6 +36,22 @@ function init() {
       navigator.serviceWorker.getRegistrations().then((rs) => rs.forEach((r) => r.unregister()));
     } else {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
+      // shell nova ativou (skipWaiting+claim) => recarrega UMA vez para exibi-la já;
+      // sem isso, a versão nova só aparecia na segunda visita
+      const hadController = !!navigator.serviceWorker.controller;
+      let reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!hadController || reloaded) return; // primeira instalação não recarrega
+        reloaded = true;
+        const politeReload = () => {
+          if (state.measuring) {
+            setTimeout(politeReload, 1500); // a medição é sagrada
+            return;
+          }
+          location.reload();
+        };
+        politeReload();
+      });
     }
   }
 

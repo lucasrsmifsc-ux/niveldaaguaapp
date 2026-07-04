@@ -1,6 +1,6 @@
 // Service worker da Estação: shell 100% offline, cache-first.
 // Bump manual do CACHE a cada deploy — é o "sistema de build" do projeto.
-const CACHE = 'chs-v4';
+const CACHE = 'chs-v5';
 
 const SHELL = [
   './',
@@ -27,7 +27,8 @@ self.addEventListener('install', (e) => {
   e.waitUntil(
     caches
       .open(CACHE)
-      .then((c) => c.addAll(SHELL))
+      // cache: 'reload' fura o cache HTTP — a shell nova nunca mistura arquivo velho
+      .then((c) => c.addAll(SHELL.map((u) => new Request(u, { cache: 'reload' }))))
       .then(() => self.skipWaiting())
   );
 });
