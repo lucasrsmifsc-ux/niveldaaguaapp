@@ -54,4 +54,15 @@ export const storage = {
 
   getOnboarded: () => get('chs_onboarded', false),
   setOnboarded: () => set('chs_onboarded', true),
+
+  getDcscCache: () => get('chs_dcsc'),
+  setDcscCache: (v) => set('chs_dcsc', v),
+
+  // cidades que já tiveram leitura oficial (o selo de teatro não pode mentir num apagão)
+  getStationMemory: () => get('chs_temestacao', {}),
+  setStationMemory: (v) => set('chs_temestacao', v),
+
+  // últimas coordenadas conhecidas por estação (a API estadual "pisca" o position)
+  getCoordMemory: () => get('chs_coords', {}),
+  setCoordMemory: (v) => set('chs_coords', v),
 };

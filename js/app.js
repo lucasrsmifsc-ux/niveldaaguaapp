@@ -5,6 +5,7 @@ import * as ui from './ui.js';
 import * as audio from './audio.js';
 import { storage } from './storage.js';
 import { getWeather } from './weather.js';
+import { getRealLevel, hasKnownStation } from './riverlevel.js';
 import { searchCity } from './geocode.js';
 import { computeResult, buildBoletim, skyStateOf, dailyBits, buildShareText } from './comedy.js';
 import { makeRng, pickN, dayKey } from './rng.js';
@@ -212,6 +213,16 @@ function enterMain() {
     applyScene(w);
     ui.renderBoletim(buildBoletim(w.outlook, w.source, w.ageHours, reqCity.id, 0));
   });
+  ui.setNivelChip('');
+  getRealLevel(reqCity).then((real) => {
+    if (state.city?.id !== reqCity.id || !real) return;
+    ui.setNivelChip(`RIO AGORA: ${real.nivel.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} M (OFICIAL)`);
+    ui.setWaterLevel(
+      real.cotas
+        ? Math.min(92, 15 + (real.nivel / real.cotas.alertaMaximo) * 72)
+        : Math.min(90, 12 + real.nivel * 9)
+    );
+  });
 }
 
 function applyScene(w) {
@@ -239,8 +250,9 @@ async function measure(turbo) {
   ui.termStart();
   ui.setMeasuring(true);
 
-  // clima real em paralelo com o teatro — a demora É o produto
+  // clima real + nível real em paralelo com o teatro — a demora É o produto
   const weatherP = getWeather(city);
+  const realP = getRealLevel(city).catch(() => null);
 
   // sonar (pitch sobe = "chegando na resposta")
   const pingTimes = turbo ? [150, 850, 1500, 2000, 2400] : [200, 1600, 3100];
@@ -292,6 +304,17 @@ async function measure(turbo) {
     return;
   }
 
+  // nível real com prazo: rede lenta não pode segurar o laudo (o prefetch preenche depois)
+  const realLevel = await Promise.race([realP, sleep(2500).then(() => null)]);
+
+  if (state.city?.id !== city.id) {
+    // trocaram o rio durante a espera do nível real; arquiva sem carimbo
+    timers.forEach(clearTimeout);
+    ui.setMeasuring(false);
+    state.measuring = false;
+    return;
+  }
+
   const result = computeResult({
     outlook: w.outlook,
     source: w.source,
@@ -299,7 +322,14 @@ async function measure(turbo) {
     pressCount,
     cityId: city.id,
     turbo,
+    realLevel,
+    stationOffline: !realLevel && hasKnownStation(city),
   });
+  ui.setNivelChip(
+    realLevel
+      ? `RIO AGORA: ${realLevel.nivel.toLocaleString('pt-BR', { minimumFractionDigits: 2 })} M (OFICIAL)`
+      : '' // selo velho não pode conviver com laudo teatral
+  );
 
   audio.chime();
   vibrate([30, 50, 30]);

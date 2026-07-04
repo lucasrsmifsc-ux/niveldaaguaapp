@@ -58,8 +58,17 @@ export function setWaterLevel(pct) {
   els.aguaNivel.style.setProperty('--nivel-agua', `${y}px`);
 }
 
+let condicaoBase = '';
+let nivelChip = '';
+
 export function setCondicao(txt) {
-  els.condicao.textContent = txt;
+  condicaoBase = txt;
+  els.condicao.textContent = nivelChip ? `${condicaoBase} · ${nivelChip}` : condicaoBase;
+}
+
+export function setNivelChip(txt) {
+  nivelChip = txt || '';
+  els.condicao.textContent = nivelChip ? `${condicaoBase} · ${nivelChip}` : condicaoBase;
 }
 
 export function setFaixa(txt) {
@@ -159,13 +168,20 @@ function gaugeSvg(angle) {
 
 export function renderLaudo(result, sourceBadge, onShare) {
   const extras = result.extraLines.map((l) => `<div class="laudo-extra">${l}</div>`).join('');
+  // nome de estação/fonte vem de API de terceiros: o selo é texto puro, escapa inteiro
+  const badge = result.real
+    ? `<div class="selo-real">${esc(result.nivelBadge)}</div>`
+    : `<div class="selo-teatro">${esc(result.nivelBadge)}</div>`;
+  const serio = result.serioBox ? `<div class="laudo-serio">${result.serioBox}</div>` : '';
   els.painel.innerHTML = `
     <div class="laudo" id="laudoCard">
       <div class="carimbo">${result.stamp}</div>
       <div class="laudo-cabecalho">LAUDO TÉCNICO DE NÍVEL FLUVIAL<br>Nº ${result.protocol} · EST. 001 — FUNDOS DE CASA</div>
+      ${badge}
+      ${serio}
       <div class="laudo-rotulo">Nível aferido</div>
       <div class="laudo-valor">${result.valueText}<br><small>(${result.unitJoke})</small></div>
-      <div class="laudo-conversao">${result.conversionLine}</div>
+      ${result.conversionLine ? `<div class="laudo-conversao">${result.conversionLine}</div>` : ''}
       <div class="laudo-rotulo">Parecer técnico</div>
       <p class="laudo-veredito">${result.verdict}</p>
       <div class="laudo-assinatura">${result.signature}</div>

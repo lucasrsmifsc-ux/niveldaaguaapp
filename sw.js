@@ -1,6 +1,6 @@
 // Service worker da Estação: shell 100% offline, cache-first.
 // Bump manual do CACHE a cada deploy — é o "sistema de build" do projeto.
-const CACHE = 'chs-v6';
+const CACHE = 'chs-v7';
 
 const SHELL = [
   './',
@@ -9,6 +9,7 @@ const SHELL = [
   './js/app.js',
   './js/ui.js',
   './js/weather.js',
+  './js/riverlevel.js',
   './js/geocode.js',
   './js/content.js',
   './js/comedy.js',

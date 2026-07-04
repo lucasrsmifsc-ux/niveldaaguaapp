@@ -1,7 +1,7 @@
 // Capivara Hidrológica S.A. — Departamento de Conteúdo Oficial
 // SÓ DADOS. O conteúdo É o produto. Nenhuma lógica aqui dentro.
 
-export const VERSAO = 'v2.golfinho.8 — sonar fura até o modo silencioso';
+export const VERSAO = 'v3.riodeverdade.1 — medição oficial onde a Defesa Civil alcança';
 export const VERSAO_JACARE = 'v3.jacare.1 — build clandestino, aprovado pelo jacaré';
 
 export const LOADING_MESSAGES = [
@@ -54,6 +54,34 @@ export const UNITS = [
 ];
 
 export const CONVERSION_LINE = '≈ {m} m em unidades sem graça (metros) · margem de erro: 1 bigode de capivara';
+export const CONVERSION_LINE_REAL = '= {m} m DE VERDADE · medição oficial, sem interpretação artística';
+
+// selos de procedência do nível
+export const REAL_BADGE = 'MEDIÇÃO DE VERDADE ✓ · {fonte} · estação {estacao} · última leitura: {hora}';
+export const TEATRO_BADGE =
+  'nível interpretado artisticamente por uma capivara — sua cidade ainda não tem estação oficial integrada (a chuva continua sendo de verdade)';
+export const TEATRO_BADGE_FORA_DO_AR =
+  'nível interpretado artisticamente por uma capivara — a estação oficial da sua cidade está sem leitura recente neste momento (a chuva continua sendo de verdade)';
+export const REAL_OFFLINE_VERDICT =
+  'A previsão de chuva está fora do ar, mas o nível oficial chegou firme — a Defesa Civil não tira folga. Rio medido, casa seca, capivara servida.';
+
+// modo sério: nível real acima da cota de atenção — a piada dá lugar ao protocolo
+export const SERIO_VERDICT =
+  'O nível de verdade passou da cota de atenção. Aqui a capivara tira o capacete e passa a palavra: acompanhe a Defesa Civil da sua cidade e siga as orientações oficiais. O app volta a brincar quando o rio baixar.';
+export const SERIO_SIGNATURE = '— Protocolo de Honestidade da Estação';
+export const SERIO_IPP_CAPTION =
+  'IPP™ suspenso por protocolo: com o rio acima da cota de atenção, preocupação é assunto de gente grande — Defesa Civil 199.';
+export const SERIO_BOX =
+  'NÍVEL ACIMA DA COTA DE ATENÇÃO ({cota} m). Informação oficial e atualizada: <a href="{url}" target="_blank" rel="noopener">site da Defesa Civil</a> · telefone <a href="tel:199">199</a>.';
+export const SERIO_STAMP = 'PROTOCOLO DE HONESTIDADE EM VIGOR';
+
+export const SHARE_TEXT_SERIO = `BOLETIM — Capivara Hidrológica S.A.
+Nível do rio: {valor}
+ATENÇÃO: nível acima da cota de atenção.
+Acompanhe a Defesa Civil: {defesaCivilUrl}
+Telefone: 199
+Chuva hoje: {prob}% ({mm} mm)
+{url}`;
 
 export const VERDICTS = {
   seco: [

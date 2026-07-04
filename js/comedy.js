@@ -24,7 +24,7 @@ export function skyStateOf(outlook) {
   return { state, drizzle: state === 'nublado' && prob >= 50, raincoat: outlook.probMax48 >= 70 };
 }
 
-export function computeResult({ outlook, source, ageHours, pressCount, cityId, turbo }) {
+export function computeResult({ outlook, source, ageHours, pressCount, cityId, turbo, realLevel, stationOffline }) {
   const dk = dayKey();
   const dayRng = makeRng(`${dk}:${cityId}`);
   const pressRng = makeRng(`${dk}:${cityId}:${pressCount}`);
@@ -36,8 +36,13 @@ export function computeResult({ outlook, source, ageHours, pressCount, cityId, t
     : null;
   const tier = tierOf(verdictLevel);
 
-  // ---- nível "medido" (estável no dia; ±1cm por aperto = "margem de erro de um bigode") ----
-  const meters = clamp(
+  const real = realLevel && typeof realLevel.nivel === 'number' ? realLevel : null;
+  // modo sério: só quando há cota oficial E o nível real passou dela (hoje: Blumenau)
+  const serio = !!(real && real.cotas && real.nivel >= real.cotas.atencao);
+
+  // ---- nível: o REAL quando a Defesa Civil mede; senão o teatral de sempre ----
+  // (consome os mesmos rngs nos dois caminhos para a unidade do dia não mudar)
+  const fakeMeters = clamp(
     1.2 +
       Math.sin(dayOfYear() / 58) * 0.15 +
       (outlook?.rain48past ?? 0) * 0.008 +
@@ -47,8 +52,14 @@ export function computeResult({ outlook, source, ageHours, pressCount, cityId, t
     0.6,
     2.4
   );
+  const meters = real ? real.nivel : fakeMeters;
 
-  const riverPercent = clamp(18 + (level ?? 1) * 18 + dayRng() * 10 + (pressRng() - 0.5) * 6, 5, 92);
+  const fakePercent = clamp(18 + (level ?? 1) * 18 + dayRng() * 10 + (pressRng() - 0.5) * 6, 5, 92);
+  const riverPercent = real
+    ? real.cotas
+      ? clamp(15 + (real.nivel / real.cotas.alertaMaximo) * 72, 8, 92)
+      : clamp(12 + real.nivel * 9, 10, 90)
+    : fakePercent;
 
   // ---- unidade do dia ----
   const unit = C.UNITS[Math.floor(dayRng() * C.UNITS.length)];
@@ -56,16 +67,29 @@ export function computeResult({ outlook, source, ageHours, pressCount, cityId, t
   const dec = unitValue >= 20 ? 0 : 1;
   const rounded = Number(unitValue.toFixed(dec));
   const unitName = rounded <= 1 ? unit.s : unit.p; // "0,8 capivara", não "0,8 capivaras"
-  const valueText = `${fmt(unitValue, dec)} ${unitName}`;
+  // em modo sério, piada dá lugar ao número oficial
+  const valueText = serio ? `${fmt(meters, 2)} m (medição oficial)` : `${fmt(unitValue, dec)} ${unitName}`;
+  const unitJoke = serio ? 'unidades de brincadeira suspensas até o rio baixar' : unit.piada;
 
   // ---- veredito ----
+  // (pressRng consumido igual em todos os caminhos: a sequência não pode depender do modo)
   const verdictPool = tier === 'offline' ? C.OFFLINE_VERDICTS : C.VERDICTS[tier];
-  const verdict = pick(pressRng, verdictPool);
-  const signature = pick(pressRng, C.SIGNATURES);
+  let verdict = pick(pressRng, verdictPool);
+  let signature = pick(pressRng, C.SIGNATURES);
+  if (serio) {
+    verdict = C.SERIO_VERDICT;
+    signature = C.SERIO_SIGNATURE;
+  } else if (real && tier === 'offline') {
+    // "sem internet" no veredito + selo verde de medição oficial não podem coexistir
+    verdict = C.REAL_OFFLINE_VERDICT;
+  }
 
   // ---- IPP™ (hard cap 2,5 — a agulha nunca chega na zona "LIGA PRO FILHO") ----
   let ipp;
-  if (tier === 'offline') {
+  if (serio) {
+    // com o rio de verdade acima da cota, o medidor de piada sai de cena
+    ipp = { value: null, text: '—', caption: C.SERIO_IPP_CAPTION, angle: -90 };
+  } else if (tier === 'offline') {
     ipp = { value: null, text: '?,?', caption: C.IPP_OFFLINE_CAPTION, angle: -72 };
   } else {
     const v = Math.min(2.5, 0.3 + ((outlook.probMax48 ?? 0) / 100) * 2 + dayRng() * 0.2);
@@ -77,35 +101,77 @@ export function computeResult({ outlook, source, ageHours, pressCount, cityId, t
 
   // ---- extras ----
   const extraLines = [];
-  if (turbo) extraLines.push(C.TURBO_LINE);
+  if (turbo && !serio) extraLines.push(C.TURBO_LINE);
   const topHat = pressRng() < 0.01;
-  if (topHat) extraLines.push(C.TOPHAT_LINE);
-  if (pressCount === 5) extraLines.push(C.PRESS_5_LINE);
-  if (pressCount === 10) extraLines.push(C.PRESS_10_LINE);
-  if (outlook && outlook.probMax48 >= 90 && outlook.maxSum48 >= 25) extraLines.push(C.EXTREME_LINE);
+  if (topHat && !serio) extraLines.push(C.TOPHAT_LINE);
+  if (pressCount === 5 && !serio) extraLines.push(C.PRESS_5_LINE);
+  if (pressCount === 10 && !serio) extraLines.push(C.PRESS_10_LINE);
+  if (outlook && outlook.probMax48 >= 90 && outlook.maxSum48 >= 25 && !serio)
+    extraLines.push(C.EXTREME_LINE);
+
+  // procedência do nível (o aviso pedido: quando é de verdade, quando é teatro)
+  const nivelBadge = real
+    ? C.REAL_BADGE.replace('{fonte}', real.fonte)
+        .replace('{estacao}', real.estacao)
+        .replace(
+          '{hora}',
+          new Date(real.ts).toLocaleTimeString('pt-BR', {
+            hour: '2-digit',
+            minute: '2-digit',
+            timeZone: 'America/Sao_Paulo', // hora da estação, não do aparelho de quem lê
+          })
+        )
+    : stationOffline
+      ? C.TEATRO_BADGE_FORA_DO_AR
+      : C.TEATRO_BADGE;
+
+  const serioBox = serio
+    ? C.SERIO_BOX.replace(
+        '{cota}',
+        fmt(real.cotas.atencao, Number.isInteger(real.cotas.atencao) ? 0 : 1)
+      ).replace('{url}', real.url)
+    : null;
+
+  // consumo do pressRng é incondicional; só a exibição muda por modo
+  const stampPick = pick(pressRng, C.STAMPS);
 
   return {
     protocol: `${dk}/${String(pressCount).padStart(3, '0')}`,
     valueText,
-    unitJoke: unit.piada,
-    conversionLine: C.CONVERSION_LINE.replace('{m}', fmt(meters, 2)),
+    unitJoke,
+    // em sério a linha viraria "4,20 m = 4,20 m"; suprime
+    conversionLine: serio
+      ? null
+      : real
+        ? C.CONVERSION_LINE_REAL.replace('{m}', fmt(meters, 2))
+        : C.CONVERSION_LINE.replace('{m}', fmt(meters, 2)),
     verdict,
     signature,
     ipp,
-    stamp: pick(pressRng, C.STAMPS),
+    stamp: serio ? C.SERIO_STAMP : stampPick,
     riverPercent,
     extraLines,
-    topHat,
+    topHat: topHat && !serio,
+    real: !!real,
+    serio,
+    serioBox,
+    nivelBadge,
     source,
     ageHours,
     // para o compartilhar
     share: {
-      valor: valueText,
-      ipp: tier === 'offline' ? '?,?' : fmt(ipp.value, 1),
-      caption: ipp.caption,
+      valor: serio
+        ? `${fmt(meters, 2)} m — OFICIAL (${real.fonte})`
+        : real
+          ? `${valueText} (${fmt(meters, 2)} m DE VERDADE, ${real.fonte})`
+          : valueText,
       veredito: verdict,
       prob: outlook ? outlook.days[0].prob : null,
       mm: outlook ? outlook.days[0].sum : null,
+      ipp: ipp.value == null ? ipp.text : fmt(ipp.value, 1), // '—' sério / '?,?' offline: sem crash
+      caption: ipp.caption,
+      serio,
+      defesaCivilUrl: real?.url ?? null,
     },
   };
 }
@@ -159,6 +225,14 @@ export function dailyBits(cityId) {
 }
 
 export function buildShareText(share, url) {
+  if (share.serio) {
+    // acima da cota, a mensagem encaminhável é sóbria e aponta para a fonte oficial
+    return C.SHARE_TEXT_SERIO.replace('{valor}', share.valor)
+      .replace('{defesaCivilUrl}', share.defesaCivilUrl ?? 'https://defesacivil.sc.gov.br')
+      .replace('{prob}', share.prob ?? '—')
+      .replace('{mm}', share.mm != null ? fmt(share.mm, share.mm >= 10 ? 0 : 1) : '—')
+      .replace('{url}', url);
+  }
   return C.SHARE_TEXT.replace('{valor}', share.valor)
     .replace('{ipp}', share.ipp)
     .replace('{caption}', share.caption)
