@@ -53,6 +53,11 @@ function init() {
   else if (storage.getOnboarded()) enterSetup();
   else enterOnboarding();
 
+  // iOS suspende o áudio quando o app vai pro fundo; retoma na volta
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden) audio.resumeIfNeeded();
+  });
+
   scheduleFishJump();
 }
 
@@ -503,6 +508,30 @@ function wireConfig() {
     storage.setSettings(state.settings);
     audio.setSound(state.settings.sound);
     ui.soundIcon(state.settings.sound);
+  });
+
+  $('#btnTestarSom').addEventListener('click', () => {
+    audio.initAudio(); // dentro do gesto: o desbloqueio mais confiável possível
+    const st = audio.audioState();
+    if (!st.supported) {
+      ui.toast('Este navegador não tem WebAudio. O sonar opera em silêncio absoluto.', 6000);
+      return;
+    }
+    if (!state.settings.sound) {
+      ui.toast('O som está desligado no botãozinho de alto-falante lá em cima. Liga ele e testa de novo.', 6000);
+      return;
+    }
+    audio.ping(880);
+    setTimeout(() => audio.chime(), 700);
+    setTimeout(() => {
+      const s2 = audio.audioState();
+      ui.toast(
+        s2.state === 'running'
+          ? 'Sonar disparado! Não ouviu? Confere o volume do aparelho — e, no iPhone, a chavinha lateral de silencioso.'
+          : `O navegador está segurando o áudio (estado: ${s2.state}). Toque na tela e teste de novo.`,
+        7000
+      );
+    }, 350);
   });
 
   attachCitySearch($('#inputCidadeConfig'), $('#listaCidadesConfig'), (city) => {

@@ -14,7 +14,22 @@ export function initAudio() {
     master.gain.value = soundOn ? 0.5 : 0;
     master.connect(ctx.destination);
   }
-  if (ctx.state === 'suspended') ctx.resume();
+  // 'suspended' (política de autoplay) e 'interrupted' (iOS pós-ligação/Siri)
+  if (ctx.state !== 'running') ctx.resume().catch(() => {});
+}
+
+// só retoma se o contexto já existe — para o safety net de visibilitychange
+export function resumeIfNeeded() {
+  if (ctx && ctx.state !== 'running') ctx.resume().catch(() => {});
+}
+
+export function audioState() {
+  return {
+    supported: !!(window.AudioContext || window.webkitAudioContext),
+    created: !!ctx,
+    state: ctx ? ctx.state : 'não criado',
+    soundOn,
+  };
 }
 
 export function setSound(on) {

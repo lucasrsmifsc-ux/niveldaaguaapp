@@ -850,6 +850,7 @@ a { color: var(--azul-rio); }
   cursor: pointer;
 }
 .config-toggle input { width: 18px; height: 18px; accent-color: var(--verde-varzea); }
+.config-testar-som { width: 100%; margin: 0 0 14px; }
 .config-sobre { border-top: 2px dotted #c9c2ae; padding-top: 12px; margin-top: 4px; }
 .config-sobre h3 { font-size: 11px; margin-bottom: 6px; }
 .config-sobre p { font-size: 12px; line-height: 1.5; }
