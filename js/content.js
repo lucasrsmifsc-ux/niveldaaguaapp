@@ -1,7 +1,7 @@
 // Capivara Hidrológica S.A. — Departamento de Conteúdo Oficial
 // SÓ DADOS. O conteúdo É o produto. Nenhuma lógica aqui dentro.
 
-export const VERSAO = 'v2.golfinho.7 — atualiza sozinho, igual o rio';
+export const VERSAO = 'v2.golfinho.8 — sonar fura até o modo silencioso';
 export const VERSAO_JACARE = 'v3.jacare.1 — build clandestino, aprovado pelo jacaré';
 
 export const LOADING_MESSAGES = [

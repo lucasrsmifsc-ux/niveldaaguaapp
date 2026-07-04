@@ -4,6 +4,42 @@
 let ctx = null;
 let master = null;
 let soundOn = true;
+let unmuteEl = null;
+
+// WAV de 50ms de silêncio gerado em memória (sem arquivo, sem base64 gigante)
+function silentWavUrl() {
+  const rate = 8000;
+  const samples = 400;
+  const buf = new ArrayBuffer(44 + samples * 2);
+  const v = new DataView(buf);
+  const w = (o, s) => {
+    for (let i = 0; i < s.length; i++) v.setUint8(o + i, s.charCodeAt(i));
+  };
+  w(0, 'RIFF'); v.setUint32(4, 36 + samples * 2, true); w(8, 'WAVE'); w(12, 'fmt ');
+  v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+  v.setUint32(24, rate, true); v.setUint32(28, rate * 2, true); v.setUint16(32, 2, true);
+  v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, samples * 2, true);
+  return URL.createObjectURL(new Blob([buf], { type: 'audio/wav' }));
+}
+
+// Truque anti-chavinha: um <audio> em loop silencioso muda a sessão de áudio do iOS
+// para a categoria "mídia" (a mesma do YouTube), e aí o WebAudio toca
+// mesmo com o iPhone no modo silencioso. Inofensivo nos demais navegadores.
+function unlockMediaSession() {
+  if (unmuteEl) return;
+  try {
+    const el = document.createElement('audio');
+    el.setAttribute('playsinline', '');
+    el.loop = true;
+    el.src = silentWavUrl();
+    unmuteEl = el;
+    el.play().catch(() => {
+      unmuteEl = null; // sem gesto válido: tenta de novo no próximo toque
+    });
+  } catch {
+    unmuteEl = null;
+  }
+}
 
 export function initAudio() {
   if (!ctx) {
@@ -16,11 +52,13 @@ export function initAudio() {
   }
   // 'suspended' (política de autoplay) e 'interrupted' (iOS pós-ligação/Siri)
   if (ctx.state !== 'running') ctx.resume().catch(() => {});
+  unlockMediaSession();
 }
 
 // só retoma se o contexto já existe — para o safety net de visibilitychange
 export function resumeIfNeeded() {
   if (ctx && ctx.state !== 'running') ctx.resume().catch(() => {});
+  if (unmuteEl && unmuteEl.paused) unmuteEl.play().catch(() => {});
 }
 
 export function audioState() {

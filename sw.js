@@ -1,6 +1,6 @@
 // Service worker da Estação: shell 100% offline, cache-first.
 // Bump manual do CACHE a cada deploy — é o "sistema de build" do projeto.
-const CACHE = 'chs-v5';
+const CACHE = 'chs-v6';
 
 const SHELL = [
   './',
