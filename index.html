@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0B3D5C">
+  <meta name="color-scheme" content="only light">
+  <meta name="description" content="Monitoramento hidrológico de altíssima precisão duvidosa. Aferido por uma capivara de capacete.">
+  <title>Capivara Hidrológica S.A.</title>
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" href="./icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+  <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+
+  <!-- ==== selo/logo reutilizável ==== -->
+  <svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+    <symbol id="logo-badge" viewBox="0 0 100 100">
+      <circle cx="50" cy="50" r="49" fill="#0B3D5C"/>
+      <circle cx="50" cy="50" r="46" fill="none" stroke="#F4F1E8" stroke-width="1.4"/>
+      <circle cx="50" cy="50" r="34" fill="none" stroke="#F4F1E8" stroke-width="1"/>
+      <path id="logo-arco" d="M 50 50 m -40 0 a 40 40 0 1 1 80 0 a 40 40 0 1 1 -80 0" fill="none"/>
+      <text font-size="8.2" fill="#F4F1E8" font-family="ui-monospace, Menlo, monospace" letter-spacing="1.5">
+        <textPath href="#logo-arco" startOffset="2%">CAPIVARA HIDROLÓGICA S.A. ★ EST. 1987 ★</textPath>
+      </text>
+      <!-- cabeça da capivara de perfil, com capacete -->
+      <g transform="translate(50 54)">
+        <ellipse cx="0" cy="0" rx="17" ry="13.5" fill="#8B6B4A"/>
+        <rect x="-27" y="-4" width="16" height="12" rx="5" fill="#7A5C3F"/>
+        <circle cx="-22" cy="1" r="1.1" fill="#4A3826"/>
+        <circle cx="-6" cy="-4" r="1.9" fill="#241708"/>
+        <circle cx="9" cy="-11" r="3.4" fill="#74573C"/>
+        <path d="M -13 -10 Q 0 -24 14 -10 Z" fill="#FF7A00"/>
+        <rect x="-18" y="-11" width="35" height="3.6" rx="1.8" fill="#FF7A00"/>
+      </g>
+      <path d="M 26 78 q 6 -5 12 0 t 12 0 t 12 0 t 12 0" fill="none" stroke="#7FB3D5" stroke-width="2.4" stroke-linecap="round"/>
+      <path d="M 31 85 q 5 -4 10 0 t 10 0 t 10 0 t 10 0" fill="none" stroke="#1B6CA8" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+  </svg>
+
+  <!-- ==== cabeçalho ==== -->
+  <header class="topo">
+    <svg class="topo-logo" aria-hidden="true"><use href="#logo-badge"/></svg>
+    <div class="topo-textos">
+      <h1>CAPIVARA HIDROLÓGICA S.A.</h1>
+      <p class="slogan">Medindo rios com precisão duvidosa desde sempre.</p>
+    </div>
+    <div class="topo-acoes">
+      <span class="aovivo"><span class="aovivo-dot"></span>AO VIVO</span>
+      <div class="topo-botoes">
+        <button id="btnSom" class="icone-btn" aria-label="Ligar/desligar som" title="Som">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/>
+            <path class="som-ondas" d="M16 9 q 3 3 0 6 M18.5 7 q 4.5 5 0 10" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            <line class="som-mudo" x1="16" y1="8" x2="21" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round" style="display:none"/>
+          </svg>
+        </button>
+        <button id="btnConfig" class="icone-btn" aria-label="Configurações" title="Configurações">
+          <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true">
+            <path fill="currentColor" d="M12 8a4 4 0 1 0 0 8 4 4 0 0 0 0-8zm9 4c0-.6-.05-1.1-.14-1.6l2-1.5-2-3.4-2.3 1a7.6 7.6 0 0 0-2.7-1.6L15.5 2h-4l-.4 2.9a7.6 7.6 0 0 0-2.7 1.6l-2.3-1-2 3.4 2 1.5A9 9 0 0 0 6 12c0 .6.05 1.1.14 1.6l-2 1.5 2 3.4 2.3-1a7.6 7.6 0 0 0 2.7 1.6l.4 2.9h4l.4-2.9a7.6 7.6 0 0 0 2.7-1.6l2.3 1 2-3.4-2-1.5c.09-.5.14-1 .14-1.6z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </header>
+  <div class="faixa-protocolo" id="faixaProtocolo">EST. FLUVIOMÉTRICA 001 · FUNDOS DE CASA</div>
+
+  <main>
+    <!-- ==== tela de setup (primeira execução) ==== -->
+    <section data-screen="setup" hidden>
+      <div class="papel-timbrado">
+        <svg class="setup-logo" aria-hidden="true"><use href="#logo-badge"/></svg>
+        <h2 id="setupTitulo">BEM-VINDO À CENTRAL DE MONITORAMENTO</h2>
+        <p id="setupTexto"></p>
+        <div class="busca-cidade">
+          <input id="inputCidadeSetup" type="text" autocomplete="off" inputmode="text" placeholder="Digite sua cidade...">
+          <ul id="listaCidadesSetup" class="lista-cidades" hidden></ul>
+        </div>
+        <p class="dica" id="setupDica"></p>
+        <p class="miudinho">Formulário CHSA-001 · preencher com letra de forma · a capivara confere</p>
+      </div>
+    </section>
+
+    <!-- ==== tela principal ==== -->
+    <section data-screen="main" hidden>
+
+      <div class="cena-moldura">
+        <svg id="cena" viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice" class="ceu--sol" aria-label="Cena do rio monitorado">
+          <defs>
+            <linearGradient id="gradSol" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#8ECDF0"/><stop offset="1" stop-color="#F7E8B5"/>
+            </linearGradient>
+            <linearGradient id="gradNub" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#93A8B8"/><stop offset="1" stop-color="#C9D4DA"/>
+            </linearGradient>
+            <linearGradient id="gradChuva" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#5C6B78"/><stop offset="1" stop-color="#93A3AD"/>
+            </linearGradient>
+          </defs>
+
+          <!-- céus (crossfade por classe) -->
+          <rect class="ceu-camada ceu-camada--sol" width="400" height="260" fill="url(#gradSol)"/>
+          <rect class="ceu-camada ceu-camada--nub" width="400" height="260" fill="url(#gradNub)"/>
+          <rect class="ceu-camada ceu-camada--chuva" width="400" height="260" fill="url(#gradChuva)"/>
+
+          <!-- sol -->
+          <g id="sol">
+            <g class="sol-raios" stroke="#FFD75E" stroke-width="3" stroke-linecap="round">
+              <line x1="0" y1="-22" x2="0" y2="-30"/><line x1="0" y1="22" x2="0" y2="30"/>
+              <line x1="-22" y1="0" x2="-30" y2="0"/><line x1="22" y1="0" x2="30" y2="0"/>
+              <line x1="-16" y1="-16" x2="-21" y2="-21"/><line x1="16" y1="16" x2="21" y2="21"/>
+              <line x1="-16" y1="16" x2="-21" y2="21"/><line x1="16" y1="-16" x2="21" y2="-21"/>
+            </g>
+            <circle r="16" fill="#FFD75E" stroke="#F2C94C" stroke-width="1.5"/>
+          </g>
+
+          <!-- nuvens (deriva contínua; chuva interna por estado) -->
+          <g class="nuvem" id="nuvem1" style="--ny:38px; --ns:.9; --nd:55s; --natraso:-20s">
+            <ellipse cx="0" cy="0" rx="28" ry="13" class="nuvem-corpo"/>
+            <ellipse cx="-20" cy="4" rx="18" ry="10" class="nuvem-corpo"/>
+            <ellipse cx="20" cy="4" rx="18" ry="10" class="nuvem-corpo"/>
+            <ellipse cx="2" cy="-8" rx="16" ry="10" class="nuvem-corpo"/>
+            <g class="chuva-linhas" stroke="#7FB3D5" stroke-width="2" stroke-linecap="round">
+              <line x1="-20" y1="14" x2="-20" y2="21" style="--d:0s"/>
+              <line x1="-10" y1="15" x2="-10" y2="22" style="--d:.25s"/>
+              <line x1="0" y1="14" x2="0" y2="21" style="--d:.5s"/>
+              <line x1="10" y1="15" x2="10" y2="22" style="--d:.12s"/>
+              <line x1="20" y1="14" x2="20" y2="21" style="--d:.4s"/>
+            </g>
+          </g>
+          <g class="nuvem" id="nuvem2" style="--ny:66px; --ns:1.15; --nd:75s; --natraso:-45s">
+            <ellipse cx="0" cy="0" rx="28" ry="13" class="nuvem-corpo"/>
+            <ellipse cx="-20" cy="4" rx="18" ry="10" class="nuvem-corpo"/>
+            <ellipse cx="20" cy="4" rx="18" ry="10" class="nuvem-corpo"/>
+            <ellipse cx="-2" cy="-8" rx="16" ry="10" class="nuvem-corpo"/>
+            <g class="chuva-linhas" stroke="#7FB3D5" stroke-width="2" stroke-linecap="round">
+              <line x1="-22" y1="14" x2="-22" y2="21" style="--d:.3s"/>
+              <line x1="-11" y1="15" x2="-11" y2="22" style="--d:.05s"/>
+              <line x1="0" y1="14" x2="0" y2="21" style="--d:.55s"/>
+              <line x1="11" y1="15" x2="11" y2="22" style="--d:.2s"/>
+              <line x1="22" y1="14" x2="22" y2="21" style="--d:.45s"/>
+            </g>
+          </g>
+          <g class="nuvem" id="nuvem3" style="--ny:24px; --ns:.65; --nd:95s; --natraso:-70s">
+            <ellipse cx="0" cy="0" rx="28" ry="13" class="nuvem-corpo"/>
+            <ellipse cx="-18" cy="4" rx="16" ry="9" class="nuvem-corpo"/>
+            <ellipse cx="18" cy="4" rx="16" ry="9" class="nuvem-corpo"/>
+            <g class="chuva-linhas" stroke="#7FB3D5" stroke-width="2" stroke-linecap="round">
+              <line x1="-14" y1="14" x2="-14" y2="21" style="--d:.1s"/>
+              <line x1="0" y1="15" x2="0" y2="22" style="--d:.35s"/>
+              <line x1="14" y1="14" x2="14" y2="21" style="--d:.6s"/>
+            </g>
+          </g>
+
+          <!-- margem do fundo + torre de medição -->
+          <g id="margem-fundo">
+            <path d="M0 172 Q60 150 140 166 Q220 178 300 160 Q350 152 400 162 L400 210 L0 210 Z" fill="#5FA57C"/>
+            <g id="torre" transform="translate(322 122)">
+              <line x1="0" y1="0" x2="-5" y2="34" stroke="#6B7280" stroke-width="1.4"/>
+              <line x1="8" y1="0" x2="13" y2="34" stroke="#6B7280" stroke-width="1.4"/>
+              <line x1="-1" y1="9" x2="10" y2="9" stroke="#6B7280" stroke-width="1"/>
+              <line x1="-2.5" y1="20" x2="11.5" y2="20" stroke="#6B7280" stroke-width="1"/>
+              <line x1="-1" y1="9" x2="11.5" y2="20" stroke="#6B7280" stroke-width=".8"/>
+              <line x1="9" y1="9" x2="-2.5" y2="20" stroke="#6B7280" stroke-width=".8"/>
+              <rect x="-2" y="-2.5" width="12" height="2.5" fill="#6B7280"/>
+              <line x1="4" y1="-2.5" x2="4" y2="-11" stroke="#6B7280" stroke-width="1.2"/>
+              <circle class="beacon" cx="4" cy="-12.5" r="2.4" fill="#E74C3C"/>
+              <text x="-10" y="40" font-size="2.4" fill="#3d5c4a" font-family="ui-monospace, monospace">TORRE 02 — NÃO SUBIR</text>
+              <text x="-10" y="43" font-size="2.4" fill="#3d5c4a" font-family="ui-monospace, monospace">(a capivara sobe)</text>
+            </g>
+          </g>
+
+          <!-- régua fluviométrica (a água passa por cima da base) -->
+          <g id="regua">
+            <rect x="199" y="230" width="6" height="14" fill="#4a4237"/>
+            <g stroke="#333" stroke-width=".4">
+              <rect x="196" y="120" width="12" height="10" fill="#F4F1E8"/>
+              <rect x="196" y="130" width="12" height="10" fill="#FF7A00"/>
+              <rect x="196" y="140" width="12" height="10" fill="#F4F1E8"/>
+              <rect x="196" y="150" width="12" height="10" fill="#FF7A00"/>
+              <rect x="196" y="160" width="12" height="10" fill="#F4F1E8"/>
+              <rect x="196" y="170" width="12" height="10" fill="#FF7A00"/>
+              <rect x="196" y="180" width="12" height="10" fill="#F4F1E8"/>
+              <rect x="196" y="190" width="12" height="10" fill="#FF7A00"/>
+              <rect x="196" y="200" width="12" height="10" fill="#F4F1E8"/>
+              <rect x="196" y="210" width="12" height="10" fill="#FF7A00"/>
+              <rect x="196" y="220" width="12" height="10" fill="#F4F1E8"/>
+            </g>
+            <text x="193" y="128" font-size="7" text-anchor="end" fill="#0B3D5C" font-family="ui-monospace, monospace">3</text>
+            <text x="193" y="158" font-size="7" text-anchor="end" fill="#0B3D5C" font-family="ui-monospace, monospace">2</text>
+            <text x="193" y="188" font-size="7" text-anchor="end" fill="#0B3D5C" font-family="ui-monospace, monospace">1</text>
+            <rect class="regua-brilho" x="196.5" y="119" width="11" height="5" fill="#fff"/>
+            <rect class="regua-scan" x="194" y="118" width="16" height="2.5" rx="1" fill="#FF5533"/>
+          </g>
+
+          <!-- água: nível (JS) > bob > camadas + bichos -->
+          <g id="aguaNivel">
+            <g id="aguaBob">
+              <path class="onda onda--a" fill="#7FB3D5" opacity=".55" d="M0 184 Q20 176 40 184 T80 184 T120 184 T160 184 T200 184 T240 184 T280 184 T320 184 T360 184 T400 184 T440 184 T480 184 T520 184 T560 184 T600 184 T640 184 T680 184 T720 184 T760 184 T800 184 L800 260 L0 260 Z"/>
+
+              <g id="peixe" tabindex="-1">
+                <g class="peixe-corpo">
+                  <ellipse cx="0" cy="0" rx="9" ry="4" fill="#AEBEC9"/>
+                  <polygon points="8,0 15,-5 15,5" fill="#93A6B3"/>
+                  <circle cx="-5" cy="-1" r="1" fill="#22333d"/>
+                  <g class="cartola">
+                    <rect x="-8" y="-12" width="7" height="7" fill="#222"/>
+                    <rect x="-10" y="-5.6" width="11" height="1.8" fill="#222"/>
+                  </g>
+                </g>
+              </g>
+
+              <path class="onda onda--b" fill="#1B6CA8" opacity=".85" d="M0 190 Q25 180 50 190 T100 190 T150 190 T200 190 T250 190 T300 190 T350 190 T400 190 T450 190 T500 190 T550 190 T600 190 T650 190 T700 190 T750 190 T800 190 L800 260 L0 260 Z"/>
+
+              <g id="pato" class="pato" role="button" aria-label="Pato de borracha institucional">
+                <rect x="-18" y="164" width="42" height="30" fill="transparent" pointer-events="all"/>
+                <g class="pato-bob">
+                  <ellipse cx="0" cy="186" rx="10" ry="6.5" fill="#FFD400" stroke="#E0A800" stroke-width=".5"/>
+                  <polygon points="-9,184 -14,179 -8,182" fill="#FFD400"/>
+                  <circle cx="8" cy="177" r="4.8" fill="#FFD400" stroke="#E0A800" stroke-width=".5"/>
+                  <polygon points="12,176 18,178 12,180" fill="#FF8C00"/>
+                  <circle cx="9.5" cy="176" r=".9" fill="#222"/>
+                  <path d="M -4 184 q 4 -3 8 0" fill="none" stroke="#E0A800" stroke-width=".8"/>
+                  <text x="-7" y="189.5" font-size="2" fill="#8A6D00" font-family="ui-monospace, monospace">PATRIMÔNIO Nº 042</text>
+                  <g class="chapeu-marinheiro">
+                    <rect x="5" y="170.5" width="6.5" height="3" rx="1" fill="#fff"/>
+                    <rect x="4" y="173" width="8.5" height="1.3" rx=".6" fill="#2456A6"/>
+                  </g>
+                </g>
+              </g>
+
+              <g id="jacare">
+                <path d="M-30 190 Q-28 183 -18 183 L18 183 Q26 183 30 190 Z" fill="#3E7C4F"/>
+                <polygon points="-30,190 -38,184 -32,189" fill="#3E7C4F"/>
+                <circle cx="12" cy="181" r="2.6" fill="#3E7C4F"/>
+                <circle cx="18" cy="181" r="2.6" fill="#3E7C4F"/>
+                <rect x="10" y="179.4" width="4.2" height="2.2" rx=".6" fill="#111"/>
+                <rect x="16" y="179.4" width="4.2" height="2.2" rx=".6" fill="#111"/>
+                <line x1="14.2" y1="180.4" x2="16" y2="180.4" stroke="#111" stroke-width=".7"/>
+                <circle cx="24" cy="184" r=".7" fill="#1f4429"/>
+              </g>
+
+              <path class="onda onda--c" fill="#155A8A" d="M0 196 Q20 190 40 196 T80 196 T120 196 T160 196 T200 196 T240 196 T280 196 T320 196 T360 196 T400 196 T440 196 T480 196 T520 196 T560 196 T600 196 T640 196 T680 196 T720 196 T760 196 T800 196 L800 260 L0 260 Z"/>
+            </g>
+          </g>
+
+          <!-- sonar na base da régua -->
+          <g id="sonar" transform="translate(202 186)">
+            <circle class="sonar-c" style="--sd:0s" r="6" fill="none" stroke="#DFF3FF" stroke-width="1.5"/>
+            <circle class="sonar-c" style="--sd:.45s" r="6" fill="none" stroke="#DFF3FF" stroke-width="1.5"/>
+            <circle class="sonar-c" style="--sd:.9s" r="6" fill="none" stroke="#DFF3FF" stroke-width="1.5"/>
+          </g>
+
+          <!-- splash do peixe -->
+          <g id="splash" transform="translate(160 184)">
+            <circle class="respingo" style="--rd:0s" r="4" fill="none" stroke="#DFF3FF" stroke-width="1.4"/>
+            <circle class="respingo" style="--rd:.08s" r="6" fill="none" stroke="#BFE3F7" stroke-width="1.2"/>
+            <circle class="respingo" style="--rd:.16s" r="8" fill="none" stroke="#9FD3F0" stroke-width="1"/>
+            <circle class="gotinha gotinha--1" r="1.2" fill="#BFE3F7"/>
+            <circle class="gotinha gotinha--2" r="1" fill="#DFF3FF"/>
+            <circle class="gotinha gotinha--3" r="1.4" fill="#9FD3F0"/>
+          </g>
+
+          <!-- margens da frente -->
+          <g id="margem-esq">
+            <path d="M0 260 L0 186 Q28 176 56 188 Q66 192 70 260 Z" fill="#2E7D5B"/>
+            <!-- grupo externo posiciona; o interno anima (CSS transform apagaria o translate) -->
+            <g transform="translate(26 186)">
+              <g class="junco" style="--jd:0s">
+                <path d="M0 0 C -1 -8 1 -14 0 -20" fill="none" stroke="#256a4c" stroke-width="1.6" stroke-linecap="round"/>
+                <ellipse cx="0" cy="-21" rx="1.6" ry="4" fill="#6B4F2E"/>
+              </g>
+            </g>
+            <g transform="translate(34 188)">
+              <g class="junco" style="--jd:1.3s">
+                <path d="M0 0 C 1 -7 -1 -12 0 -17" fill="none" stroke="#2E7D5B" stroke-width="1.4" stroke-linecap="round"/>
+                <ellipse cx="0" cy="-18" rx="1.4" ry="3.4" fill="#7a5a34"/>
+              </g>
+            </g>
+            <g transform="translate(82 199)">
+              <ellipse cx="0" cy="0" rx="9" ry="2.8" fill="#2F8F5B"/>
+              <polygon points="0,0 9,-1.4 9,1.4" fill="#155A8A"/>
+            </g>
+          </g>
+          <g id="margem-dir">
+            <path d="M310 260 L312 198 Q340 184 400 190 L400 260 Z" fill="#2E7D5B"/>
+          </g>
+
+          <!-- Dona Jurema, Capivara Chefe (CREA-Capivara nº 001) -->
+          <g id="capivara" class="capivara" role="button" aria-label="Dona Jurema, a capivara engenheira" transform="translate(358 179)">
+            <g class="capivara-respira">
+              <g class="capa">
+                <path d="M-30 -10 Q0 -27 26 -7 L26 7 Q0 -9 -30 3 Z" fill="#FFD23F" stroke="#E8B923" stroke-width=".6"/>
+              </g>
+              <ellipse cx="0" cy="0" rx="24" ry="15" fill="#8B6B4A"/>
+              <rect x="8" y="9" width="6.5" height="11" rx="3" fill="#74573C"/>
+              <rect x="-15" y="9" width="6.5" height="11" rx="3" fill="#74573C"/>
+              <g class="cabeca" transform="translate(-22 -8)">
+                <ellipse cx="0" cy="0" rx="11" ry="9.5" fill="#8B6B4A"/>
+                <g class="focinho">
+                  <rect x="-19" y="-3" width="12" height="9" rx="4" fill="#7A5C3F"/>
+                  <circle cx="-15.5" cy="0" r=".9" fill="#4A3826"/>
+                  <line x1="-14" y1="2" x2="-22" y2="1" stroke="#5C4630" stroke-width=".5"/>
+                  <line x1="-14" y1="3.5" x2="-21.5" y2="5" stroke="#5C4630" stroke-width=".5"/>
+                </g>
+                <ellipse class="olho" cx="-2" cy="-3" rx="1.6" ry="1.8" fill="#241708"/>
+                <circle class="orelha" cx="7" cy="-8" r="3.2" fill="#74573C"/>
+                <g class="capa-capuz">
+                  <path d="M-12 -6 Q-13 -17 0 -16 L 9 -12 Q 10 -6 6 -4 Q -2 -14 -9 -3 Z" fill="#FFD23F" stroke="#E8B923" stroke-width=".5"/>
+                </g>
+                <g class="capacete">
+                  <path d="M -10.5 -7 Q 0 -18.5 10.5 -7 Z" fill="#FF7A00"/>
+                  <rect x="-13.5" y="-7.5" width="27" height="3.2" rx="1.6" fill="#FF7A00"/>
+                  <circle cx="0" cy="-11" r="1" fill="#F4F1E8"/>
+                </g>
+                <g class="chapeu-festa">
+                  <polygon points="-6,-8 6,-8 0,-23" fill="#E84393"/>
+                  <circle cx="0" cy="-23" r="2" fill="#FFD400"/>
+                  <line x1="-3" y1="-12" x2="3" y2="-14" stroke="#FFD400" stroke-width=".8"/>
+                </g>
+              </g>
+              <g class="prancheta" transform="translate(-44 -14)">
+                <rect x="0" y="0" width="11" height="14" rx="1" fill="#F4F1E8" stroke="#9a9284" stroke-width=".6"/>
+                <rect x="3" y="-1.5" width="5" height="3" rx="1" fill="#6B7280"/>
+                <line x1="2" y1="4" x2="9" y2="4" stroke="#6B7280" stroke-width=".7"/>
+                <line x1="2" y1="7" x2="9" y2="7" stroke="#6B7280" stroke-width=".7"/>
+                <line x1="2" y1="10" x2="7" y2="10" stroke="#6B7280" stroke-width=".7"/>
+              </g>
+            </g>
+          </g>
+
+          <!-- cantos secretos (konami do interior) -->
+          <rect class="konami" data-canto="0" x="0" y="0" width="64" height="42" fill="transparent"/>
+          <rect class="konami" data-canto="1" x="336" y="0" width="64" height="42" fill="transparent"/>
+          <rect class="konami" data-canto="2" x="0" y="218" width="56" height="42" fill="transparent"/>
+          <rect class="konami" data-canto="3" x="344" y="222" width="56" height="38" fill="transparent"/>
+        </svg>
+
+        <div class="cena-legendas">
+          <span class="plaquinha">“Rio dos Fundos” — óleo sobre SVG, artista desconhecida (é a capivara)</span>
+          <span class="condicao" id="condicaoAtual"></span>
+        </div>
+      </div>
+
+      <button id="btnMedir" class="botao-medir">
+        <span class="botao-label" id="btnMedirLabel">MEDIR NÍVEL DO RIO AGORA</span>
+        <span class="botao-sub">procedimento homologado NBR-1987/CAPIVARA</span>
+      </button>
+
+      <div id="painel" class="painel" aria-live="polite"></div>
+
+      <section id="boletim" class="boletim"></section>
+
+      <footer class="rodape">
+        <div class="selos-chips" id="selosChips"></div>
+        <p class="disclaimer">Em caso de enchente de verdade, confie mais na <a href="tel:199">Defesa Civil (199)</a> do que numa capivara de capacete. Ela é ótima, mas é uma capivara.</p>
+        <p class="miudinho" id="plantaoTxt"></p>
+        <p class="miudinho" id="versaoTxt"></p>
+        <p class="miudinho credito">Previsão de chuva de verdade: <a href="https://open-meteo.com/" target="_blank" rel="noopener">Open-Meteo.com</a> · O nível do rio é teatro. A tranquilidade é real.</p>
+      </footer>
+    </section>
+  </main>
+
+  <!-- ==== configurações ==== -->
+  <div id="telaConfig" class="config-fundo" hidden>
+    <div class="config-card papel-timbrado">
+      <h2>CONFIGURAÇÕES OFICIAIS</h2>
+      <label class="config-label">CIDADE VIGIADA</label>
+      <p class="config-cidade-atual" id="cidadeAtual">—</p>
+      <div class="busca-cidade">
+        <input id="inputCidadeConfig" type="text" autocomplete="off" placeholder="Trocar de rio? Digite a cidade...">
+        <ul id="listaCidadesConfig" class="lista-cidades" hidden></ul>
+      </div>
+      <label class="config-toggle">
+        <input type="checkbox" id="chkSom" checked>
+        <span>EFEITOS SONOROS DE SONAR (recomendado pela capivara)</span>
+      </label>
+      <div class="config-sobre">
+        <h3>SOBRE A ESTAÇÃO</h3>
+        <p>A Capivara Hidrológica S.A. monitora rios de fundo de quintal desde 1987 com uma equipe de exatamente uma capivara. A previsão de chuva é de verdade (Open-Meteo). O nível do rio é interpretado artisticamente.</p>
+        <p class="miudinho" id="versaoConfigTxt"></p>
+      </div>
+      <button id="btnFecharConfig" class="botao-secundario">CARIMBAR E ARQUIVAR</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast" hidden></div>
+
+  <script type="module" src="./js/app.js"></script>
+</body>
+</html>

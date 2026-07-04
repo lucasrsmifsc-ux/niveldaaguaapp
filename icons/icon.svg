@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- fundo sangrando até a borda (serve de regular e de maskable) -->
+  <rect width="512" height="512" fill="#0B3D5C"/>
+  <circle cx="256" cy="256" r="216" fill="none" stroke="#F4F1E8" stroke-width="7"/>
+  <circle cx="256" cy="256" r="160" fill="none" stroke="#F4F1E8" stroke-width="5"/>
+  <path id="arco" d="M 256 256 m -188 0 a 188 188 0 1 1 376 0 a 188 188 0 1 1 -376 0" fill="none"/>
+  <text font-size="38" fill="#F4F1E8" font-family="Menlo, monospace" letter-spacing="7">
+    <textPath href="#arco" startOffset="2%">CAPIVARA HIDROLÓGICA S.A. ★ EST. 1987 ★</textPath>
+  </text>
+  <!-- Dona Jurema de perfil, com capacete -->
+  <g transform="translate(256 275) scale(4.6)">
+    <ellipse cx="0" cy="0" rx="17" ry="13.5" fill="#8B6B4A"/>
+    <rect x="-27" y="-4" width="16" height="12" rx="5" fill="#7A5C3F"/>
+    <circle cx="-22" cy="1" r="1.1" fill="#4A3826"/>
+    <circle cx="-6" cy="-4" r="1.9" fill="#241708"/>
+    <circle cx="9" cy="-11" r="3.4" fill="#74573C"/>
+    <path d="M -13 -10 Q 0 -24 14 -10 Z" fill="#FF7A00"/>
+    <rect x="-18" y="-11" width="35" height="3.6" rx="1.8" fill="#FF7A00"/>
+  </g>
+  <path d="M 145 388 q 22 -18 44 0 t 44 0 t 44 0 t 44 0" fill="none" stroke="#7FB3D5" stroke-width="11" stroke-linecap="round"/>
+  <path d="M 163 418 q 19 -15 38 0 t 38 0 t 38 0 t 38 0" fill="none" stroke="#1B6CA8" stroke-width="11" stroke-linecap="round"/>
+</svg>
