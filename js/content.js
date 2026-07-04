@@ -1,7 +1,7 @@
 // Capivara Hidrológica S.A. — Departamento de Conteúdo Oficial
 // SÓ DADOS. O conteúdo É o produto. Nenhuma lógica aqui dentro.
 
-export const VERSAO = 'v2.golfinho.3 — build homologado numa quinta-feira';
+export const VERSAO = 'v2.golfinho.4 — agora com cerimônia de posse';
 export const VERSAO_JACARE = 'v3.jacare.1 — build clandestino, aprovado pelo jacaré';
 
 export const LOADING_MESSAGES = [
@@ -187,6 +187,8 @@ export const CONDICAO_LABELS = {
 export const STALE_BADGE = 'dados de {h}h atrás (a chuva não deve ter mudado de ideia)';
 
 export const TOASTS = {
+  posse: 'Posse registrada em ata. O cartório da margem esquerda agradece.',
+  pularPosse: 'Burocracia pulada. A capivara vai fingir que não viu.',
   cidadeSalva: 'Cidade registrada no Departamento de Assuntos Molhados.',
   festaJurema: 'Conquista desbloqueada: A Festa Secreta da Jurema',
   almirante: 'O pato foi promovido: ALMIRANTE Nº 042. A esquadra é ele mesmo.',

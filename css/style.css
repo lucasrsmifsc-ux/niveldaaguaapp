@@ -167,6 +167,67 @@ a { color: var(--azul-rio); }
 .lista-cidades li:hover, .lista-cidades li:focus { background: #eaf3fa; }
 .lista-cidades .sem-resultado { color: var(--cinza-burocracia); font-size: 12.5px; cursor: default; }
 
+/* ===================== onboarding: processo de admissão ===================== */
+
+.ob-etapa {
+  font-family: var(--fonte-dados);
+  font-size: 9.5px;
+  letter-spacing: .08em;
+  color: var(--cinza-burocracia);
+  border-bottom: 1px dashed #c9c2ae;
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+}
+
+.ob-slide { animation: obEntra .35s ease-out; }
+@keyframes obEntra {
+  from { transform: translateX(18px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+.ob-jurema { width: 150px; height: auto; display: block; margin: 0 auto 8px; }
+
+.ob-passos {
+  text-align: left;
+  padding-left: 22px;
+  margin-bottom: 14px;
+}
+.ob-passos li { font-size: 13.5px; line-height: 1.45; margin-bottom: 9px; }
+
+.ob-termo { text-align: justify; }
+
+.ob-carimbo-area { position: relative; padding-top: 6px; overflow: hidden; } /* clipa o scale(3) da carimbada */
+.ob-carimbo {
+  position: static;
+  display: inline-block;
+  max-width: 200px;
+  font-size: 9px;
+  margin: 2px auto 10px;
+  animation-delay: 0s;
+}
+.ob-assinatura { line-height: 1.5; margin-bottom: 4px !important; }
+
+.ob-dots { display: flex; justify-content: center; gap: 7px; margin: 14px 0 4px; }
+.ob-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #d8d2c0;
+  transition: background .3s;
+}
+.ob-dot--on { background: var(--azul-batimetrico); }
+
+.ob-pular {
+  display: block;
+  margin: 10px auto 0;
+  background: none;
+  border: none;
+  font-size: 11.5px;
+  color: var(--cinza-burocracia);
+  text-decoration: underline;
+  cursor: pointer;
+  padding: 6px;
+}
+
 /* ===================== cena do rio ===================== */
 
 .cena-moldura {

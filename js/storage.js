@@ -51,4 +51,7 @@ export const storage = {
 
   getQuacks: () => get('chs_quacks', 0),
   setQuacks: (n) => set('chs_quacks', n),
+
+  getOnboarded: () => get('chs_onboarded', false),
+  setOnboarded: () => set('chs_onboarded', true),
 };

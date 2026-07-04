@@ -44,14 +44,85 @@ function init() {
   wireButton();
   wireEggs();
   wireSetup();
+  wireOnboarding();
 
   if (storage.getQuacks() >= 10) ui.duckAlmirante(true);
 
   state.city = storage.getCity();
   if (state.city) enterMain();
-  else enterSetup();
+  else if (storage.getOnboarded()) enterSetup();
+  else enterOnboarding();
 
   scheduleFishJump();
+}
+
+/* ==================== onboarding: processo de admissão ==================== */
+
+const ob = { slide: 0, total: 4, assinando: false, timers: [] };
+
+function enterOnboarding() {
+  ob.slide = 0;
+  ob.assinando = false;
+  ob.timers.forEach(clearTimeout); // uma posse antiga não pode ejetar a cerimônia nova
+  ob.timers = [];
+  $('#obCarimbo').hidden = true;
+  $('#btnObProximo').disabled = false;
+  showObSlide(0);
+  ui.showScreen('onboarding');
+}
+
+function showObSlide(i) {
+  ob.slide = i;
+  document.querySelectorAll('.ob-slide').forEach((s) => {
+    s.hidden = Number(s.dataset.slide) !== i;
+  });
+  document.querySelectorAll('.ob-dot').forEach((d, j) => {
+    d.classList.toggle('ob-dot--on', j === i);
+  });
+  $('#obEtapa').textContent = `ETAPA ${i + 1} DE ${ob.total} · PROCESSO DE ADMISSÃO Nº 042/1987`;
+  $('#btnObProximo').textContent = i === ob.total - 1 ? 'ASSINAR E ASSUMIR O CARGO' : 'PRÓXIMO ▸';
+}
+
+function finishOnboarding(toastMsg) {
+  storage.setOnboarded();
+  if (toastMsg) ui.toast(toastMsg, 4000);
+  if (state.city) enterMain();
+  else enterSetup();
+}
+
+function wireOnboarding() {
+  $('#btnObProximo').addEventListener('click', () => {
+    if (ob.slide < ob.total - 1) {
+      showObSlide(ob.slide + 1);
+      return;
+    }
+    if (ob.assinando) return;
+    ob.assinando = true; // a firma só se reconhece uma vez
+    audio.initAudio();
+    $('#btnObProximo').disabled = true;
+    $('#obCarimbo').hidden = false; // solta a animação de carimbada
+    ob.timers.push(
+      setTimeout(() => {
+        audio.thud();
+        vibrate(40);
+      }, 250),
+      setTimeout(() => finishOnboarding(C.TOASTS.posse), 1400)
+    );
+  });
+
+  $('#btnObPular').addEventListener('click', () => {
+    if (ob.assinando) return; // a firma já está no cartório; tarde demais para desistir
+    finishOnboarding(C.TOASTS.pularPosse);
+  });
+
+  $('#btnReverPosse').addEventListener('click', () => {
+    if (state.measuring) {
+      ui.toast('A cerimônia espera a medição terminar. Protocolo é protocolo.', 3000);
+      return;
+    }
+    $('#telaConfig').hidden = true;
+    enterOnboarding();
+  });
 }
 
 function enterSetup() {

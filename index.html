@@ -67,6 +67,75 @@
   <div class="faixa-protocolo" id="faixaProtocolo">EST. FLUVIOMÉTRICA 001 · FUNDOS DE CASA</div>
 
   <main>
+    <!-- ==== onboarding: processo de admissão ==== -->
+    <section data-screen="onboarding" hidden>
+      <div class="papel-timbrado">
+        <div class="ob-etapa" id="obEtapa">ETAPA 1 DE 4 · PROCESSO DE ADMISSÃO Nº 042/1987</div>
+
+        <div class="ob-slide" data-slide="0">
+          <svg class="setup-logo" aria-hidden="true"><use href="#logo-badge"/></svg>
+          <h2>BEM-VINDO À CAPIVARA HIDROLÓGICA S.A.</h2>
+          <p>Desde 1987 monitoramos rios de fundo de quintal que nunca fizeram nada de errado.</p>
+          <p>Este aparelho acaba de virar uma extensão oficial da <strong>Estação Fluviométrica nº&nbsp;001 — Fundos de Casa</strong>.</p>
+          <p class="miudinho">admissão em 4 etapas · leva uns 30 segundos · dispensa foto 3x4</p>
+        </div>
+
+        <div class="ob-slide" data-slide="1" hidden>
+          <svg class="ob-jurema" viewBox="-52 -34 82 60" aria-label="Dona Jurema, a capivara engenheira">
+            <g class="capivara-respira">
+              <ellipse cx="0" cy="0" rx="24" ry="15" fill="#8B6B4A"/>
+              <rect x="8" y="9" width="6.5" height="11" rx="3" fill="#74573C"/>
+              <rect x="-15" y="9" width="6.5" height="11" rx="3" fill="#74573C"/>
+              <g class="cabeca" transform="translate(-22 -8)">
+                <ellipse cx="0" cy="0" rx="11" ry="9.5" fill="#8B6B4A"/>
+                <g class="focinho">
+                  <rect x="-19" y="-3" width="12" height="9" rx="4" fill="#7A5C3F"/>
+                  <circle cx="-15.5" cy="0" r=".9" fill="#4A3826"/>
+                  <line x1="-14" y1="2" x2="-22" y2="1" stroke="#5C4630" stroke-width=".5"/>
+                  <line x1="-14" y1="3.5" x2="-21.5" y2="5" stroke="#5C4630" stroke-width=".5"/>
+                </g>
+                <ellipse class="olho" cx="-2" cy="-3" rx="1.6" ry="1.8" fill="#241708"/>
+                <circle class="orelha" cx="7" cy="-8" r="3.2" fill="#74573C"/>
+                <g class="capacete">
+                  <path d="M -10.5 -7 Q 0 -18.5 10.5 -7 Z" fill="#FF7A00"/>
+                  <rect x="-13.5" y="-7.5" width="27" height="3.2" rx="1.6" fill="#FF7A00"/>
+                  <circle cx="0" cy="-11" r="1" fill="#F4F1E8"/>
+                </g>
+              </g>
+            </g>
+          </svg>
+          <h2>SUA ENGENHEIRA RESPONSÁVEL</h2>
+          <p><strong>Dona Jurema</strong>, Capivara Chefe — CREA-Capivara nº&nbsp;001. Mede o rio, confere a régua e mastiga capim em horário de serviço (previsto em contrato).</p>
+          <p>Ela não se assusta com chuva: no máximo veste a capa e continua trabalhando. <strong>Se a Jurema está tranquila, o senhor também pode ficar.</strong></p>
+        </div>
+
+        <div class="ob-slide" data-slide="2" hidden>
+          <h2>COMO FUNCIONA O SERVIÇO</h2>
+          <ol class="ob-passos">
+            <li>O senhor aperta o botão laranja. Com moderação, ou não.</li>
+            <li>O sonar afere o nível em unidades oficiais: capivaras empilhadas, chinelos nº&nbsp;42, botijões de gás.</li>
+            <li>O IPP™ — Índice de Preocupação do Pai — calcula quanto vale a pena se preocupar. Spoiler: pouco.</li>
+          </ol>
+          <div class="laudo-extra">TRANSPARÊNCIA OFICIAL: a previsão de chuva é DE VERDADE (Open-Meteo). O nível do rio é interpretado artisticamente por uma capivara. A tranquilidade é real.</div>
+        </div>
+
+        <div class="ob-slide" data-slide="3" hidden>
+          <h2>TERMO DE POSSE</h2>
+          <p class="ob-termo">Pelo presente instrumento, o portador deste aparelho fica nomeado <strong>FISCAL AUXILIAR (HONORÁRIO)</strong> da Estação Fluviométrica nº&nbsp;001 — Fundos de Casa, com direito a medir o rio quantas vezes quiser e dever de tomar café olhando a chuva pela janela.</p>
+          <div class="ob-carimbo-area">
+            <div class="carimbo ob-carimbo" id="obCarimbo" hidden>EMPOSSADO ★ FIRMA RECONHECIDA NO CARTÓRIO DA MARGEM ESQUERDA</div>
+            <p class="ob-assinatura">________________________<br><span class="miudinho">assinatura do Fiscal (um toque no botão vale como firma)</span></p>
+          </div>
+        </div>
+
+        <div class="ob-dots" aria-hidden="true">
+          <span class="ob-dot ob-dot--on"></span><span class="ob-dot"></span><span class="ob-dot"></span><span class="ob-dot"></span>
+        </div>
+        <button id="btnObProximo" class="botao-secundario">PRÓXIMO ▸</button>
+        <button id="btnObPular" class="ob-pular">pular a burocracia (a capivara entende)</button>
+      </div>
+    </section>
+
     <!-- ==== tela de setup (primeira execução) ==== -->
     <section data-screen="setup" hidden>
       <div class="papel-timbrado">
@@ -380,6 +449,7 @@
         <h3>SOBRE A ESTAÇÃO</h3>
         <p>A Capivara Hidrológica S.A. monitora rios de fundo de quintal desde 1987 com uma equipe de exatamente uma capivara. A previsão de chuva é de verdade (Open-Meteo). O nível do rio é interpretado artisticamente.</p>
         <p class="miudinho" id="versaoConfigTxt"></p>
+        <button id="btnReverPosse" class="ob-pular">rever a cerimônia de posse</button>
       </div>
       <button id="btnFecharConfig" class="botao-secundario">CARIMBAR E ARQUIVAR</button>
     </div>
