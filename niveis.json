@@ -1,0 +1,233 @@
+{
+ "atualizadoEm": "2026-09-12T23:52:01.805Z",
+ "blumenau": {
+  "nivel": 5.85,
+  "ts": "2026-09-12T23:00:00Z",
+  "cotas": {
+   "observacao": 3,
+   "atencao": 4,
+   "alerta": 6,
+   "alertaMaximo": 8
+  },
+  "fonte": "AlertaBlu — Defesa Civil de Blumenau",
+  "url": "https://defesacivil.blumenau.sc.gov.br/d/nivel-do-rio"
+ },
+ "estacoes": [
+  {
+   "codigo": "DCSC-00043",
+   "nome": "Presidente Getúlio",
+   "nivel": 2.82,
+   "ts": "2026-09-12T23:52:01.454+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.04549789428711,
+   "lon": -49.62428283691406
+  },
+  {
+   "codigo": "DCSC-00018",
+   "nome": "Botuverá 1",
+   "nivel": 3.52,
+   "ts": "2026-09-12T23:51:51.037+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.186187744140625,
+   "lon": -49.1205940246582
+  },
+  {
+   "codigo": "DCSC-00023",
+   "nome": "Timbó 1",
+   "nivel": 3.65,
+   "ts": "2026-09-12T23:51:49.623+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.837547302246094,
+   "lon": -49.270774841308594
+  },
+  {
+   "codigo": "DCSC-00025",
+   "nome": "Agrolândia",
+   "nivel": 1.03,
+   "ts": "2026-09-12T23:51:52.604+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.412532806396484,
+   "lon": -49.83266830444336
+  },
+  {
+   "codigo": "DCSC-00013",
+   "nome": "Rio do Sul",
+   "nivel": 5.69,
+   "ts": "2026-09-12T23:51:50.272+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.20722007751465,
+   "lon": -49.63349914550781
+  },
+  {
+   "codigo": "DCSC-00021",
+   "nome": "José Boiteux",
+   "nivel": 3.16,
+   "ts": "2026-09-12T23:51:56.872+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.95484161376953,
+   "lon": -49.63359069824219
+  },
+  {
+   "codigo": "DCSC-00011",
+   "nome": "Rio dos Cedros 1",
+   "nivel": 1.69,
+   "ts": "2026-09-12T23:51:56.236+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.740013122558594,
+   "lon": -49.27268600463867
+  },
+  {
+   "codigo": "DCSC-00028",
+   "nome": "Doutor Pedrinho",
+   "nivel": 3.64,
+   "ts": "2026-09-12T23:51:53.219+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.7142333984375,
+   "lon": -49.485042572021484
+  },
+  {
+   "codigo": "DCSC-00030",
+   "nome": "Ilhota",
+   "nivel": 10.79,
+   "ts": "2026-09-12T23:51:48.060+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.894432067871094,
+   "lon": -48.82477951049805
+  },
+  {
+   "codigo": "DCSC-00031",
+   "nome": "Laurentino",
+   "nivel": 6.09,
+   "ts": "2026-09-12T23:51:48.840+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.222692489624023,
+   "lon": -49.73173522949219
+  },
+  {
+   "codigo": "DCSC-00033",
+   "nome": "Pouso Redondo",
+   "nivel": 2.94,
+   "ts": "2026-09-12T23:51:53.139+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.25749969482422,
+   "lon": -49.94142532348633
+  },
+  {
+   "codigo": "DCSC-00006",
+   "nome": "Indaial",
+   "nivel": 6.66,
+   "ts": "2026-09-12T23:51:52.894+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.910907745361328,
+   "lon": -49.26995086669922
+  },
+  {
+   "codigo": "DCSC-00020",
+   "nome": "Ibirama",
+   "nivel": 2.97,
+   "ts": "2026-09-12T23:51:55.569+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.056997299194336,
+   "lon": -49.51995086669922
+  },
+  {
+   "codigo": "DCSC-00039",
+   "nome": "Ituporanga",
+   "nivel": 2.4,
+   "ts": "2026-09-12T23:52:01.051+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.48224639892578,
+   "lon": -49.582481384277344
+  },
+  {
+   "codigo": "DCSC-00019",
+   "nome": "Brusque",
+   "nivel": 2.33,
+   "ts": "2026-09-12T23:51:48.162+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.100677490234375,
+   "lon": -48.9172248840332
+  },
+  {
+   "codigo": "DCSC-00035",
+   "nome": "Trombudo Central 2",
+   "nivel": 1.23,
+   "ts": "2026-09-12T23:51:56.135+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.312158584594727,
+   "lon": -49.79676818847656
+  },
+  {
+   "codigo": "DCSC-00001",
+   "nome": "Agronômica",
+   "nivel": 5.35,
+   "ts": "2026-09-12T23:51:49.000+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.257997512817383,
+   "lon": -49.71219253540039
+  },
+  {
+   "codigo": "DCSC-00007",
+   "nome": "Pomerode",
+   "nivel": 0.86,
+   "ts": "2026-09-12T23:51:51.396+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.73284912109375,
+   "lon": -49.17578887939453
+  },
+  {
+   "codigo": "DCSC-00004",
+   "nome": "Benedito Novo",
+   "nivel": 4.92,
+   "ts": "2026-09-12T23:51:56.681+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.78194236755371,
+   "lon": -49.36532974243164
+  },
+  {
+   "codigo": "DCSC-00032",
+   "nome": "Lontras",
+   "nivel": 6.09,
+   "ts": "2026-09-12T23:51:52.311+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.16571617126465,
+   "lon": -49.54631805419922
+  },
+  {
+   "codigo": "DCSC-00024",
+   "nome": "Vidal Ramos",
+   "nivel": 2.62,
+   "ts": "2026-09-12T23:51:58.772+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.38547706604004,
+   "lon": -49.35812759399414
+  },
+  {
+   "codigo": "DCSC-00029",
+   "nome": "Guabiruba",
+   "nivel": 24.88,
+   "ts": "2026-09-12T23:51:47.659+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.086782455444336,
+   "lon": -48.977394104003906
+  },
+  {
+   "codigo": "DCSC-00003",
+   "nome": "Ascurra",
+   "nivel": 8.76,
+   "ts": "2026-09-12T23:51:53.422+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -26.961292266845703,
+   "lon": -49.372901916503906
+  },
+  {
+   "codigo": "DCSC-00041",
+   "nome": "Taió",
+   "nivel": 6.14,
+   "ts": "2026-09-12T23:51:47.391+00:00",
+   "bacia": "SC - Rio Itajaí",
+   "lat": -27.116348266601562,
+   "lon": -50.000274658203125
+  }
+ ]
+}
